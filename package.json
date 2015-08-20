@@ -1,0 +1,32 @@
+{
+  "name": "JsonMapperJson",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./lib/json-mapper",
+  "description": "JsonMapper",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/marchah/json-mapper-json.git"
+  },
+  "keywords": [
+    "json",
+    "mapper",
+    "mapping"
+  ],
+  "dependencies": {
+    "mongoose": "^4.1.3",
+    "lodash": "^3.10.0",
+    "when": "^3.7.3"
+  },
+  "author": "marchah <marchah.dev@gmail.com>",
+  "devDependencies": {
+    "eslint": "^1.0.0",
+    "nodemon": "^1.3.7"
+  },
+  "engines": {
+    "iojs": ">= 2.4.0"
+  }
+}
