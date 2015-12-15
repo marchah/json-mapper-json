@@ -137,6 +137,20 @@ function unitTestForJsonMapper(fct) {
     }
   });
 
+  it('should throw `Invalid path field (field)` using syntactic sugar', (done) => {
+    try {
+      fct({}, {
+        field: 'field',
+      });
+      done(new Error('Not suppose to succes'));
+    }
+    catch (err) {
+      expect(err).to.be.an.instanceof(Error)
+        .and.have.property('message', 'Invalid path field (field)');
+      done();
+    }
+  });
+
   it('basic 1/2', (done) => {
     fct({
       field: 'value',
@@ -160,6 +174,30 @@ function unitTestForJsonMapper(fct) {
       'new_field': {
         path: 'field1.field2.field3',
       },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'value'});
+      done();
+    });
+  });
+  it('basic using syntactic sugar 1/2', (done) => {
+    fct({
+      field: 'value',
+    }, {
+      'new_field': 'field',
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'value'});
+      done();
+    });
+  });
+  it('basic using syntactic sugar 2/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': 'field1.field2.field3',
     }).then((result) => {
       expect(result).to.eql({'new_field': 'value'});
       done();
@@ -194,6 +232,21 @@ function unitTestForJsonMapper(fct) {
       'new_field': {
         path: 'field',
       },
+    }).then((result) => {
+      expect(result).to.eql([{'new_field': 'value1'}, {'new_field': 'value2'}, {'new_field': 'value3'}]);
+      done();
+    });
+  });
+  it('array using syntactic sugar', (done) => {
+    fct([{
+      field: 'value1',
+    }, {
+      field: 'value2',
+    }, {
+      field: 'value3',
+    },
+    ], {
+      'new_field': 'field',
     }).then((result) => {
       expect(result).to.eql([{'new_field': 'value1'}, {'new_field': 'value2'}, {'new_field': 'value3'}]);
       done();
@@ -282,8 +335,24 @@ describe('jsonMapper', () => {
           type: null,
         });
       });
-      it('should validate path has `.` character 3/3', () => {
+      it('should validate path using syntactic sugar', () => {
+        expect(getSettings('path')).to.eql({
+          formatting: null,
+          nested: null,
+          path: ['path'],
+          type: null,
+        });
+      });
+      it('should validate path has `.` character', () => {
         expect(getSettings({PATH: 'path1.path2.path3'})).to.eql({
+          formatting: null,
+          nested: null,
+          path: ['path1', 'path2', 'path3'],
+          type: null,
+        });
+      });
+      it('should validate path has `.` character using syntactic sugar', () => {
+        expect(getSettings('path1.path2.path3')).to.eql({
           formatting: null,
           nested: null,
           path: ['path1', 'path2', 'path3'],
@@ -852,6 +921,26 @@ describe('jsonMapper', () => {
         done();
       });
     });
+    it('basic using syntactic sugar 1/2', (done) => {
+      parseProperties({
+        field: 'value',
+      }, 'field').then((result) => {
+        expect(result).to.eql('value');
+        done();
+      });
+    });
+    it('basic using syntactic sugar 2/2', (done) => {
+      parseProperties({
+        field1: {
+          field2: {
+            field3: 'value',
+          },
+        },
+      }, 'field1.field2.field3').then((result) => {
+        expect(result).to.eql('value');
+        done();
+      });
+    });
     it('basic with formatting', (done) => {
       parseProperties({
         field1: {
@@ -878,6 +967,19 @@ describe('jsonMapper', () => {
       ], {
         path: 'field',
       }).then((result) => {
+        expect(result).to.eql(['value1', 'value2', 'value3']);
+        done();
+      });
+    });
+    it('array using syntactic sugar', (done) => {
+      parseProperties([{
+        field: 'value1',
+      }, {
+        field: 'value2',
+      }, {
+        field: 'value3',
+      },
+      ], 'field').then((result) => {
         expect(result).to.eql(['value1', 'value2', 'value3']);
         done();
       });
@@ -929,6 +1031,41 @@ describe('jsonMapper', () => {
         ], {
           path: 'field',
         });
+        done(new Error('Not suppose to succes'));
+      }
+      catch (err) {
+        expect(err).to.be.an.instanceof(Error)
+          .and.have.property('message', 'Invalid path field (field)');
+        done();
+      }
+    });
+    it('should throw `Invalid path` Error using syntactic sugar 1/2', (done) => {
+      try {
+        parseProperties({
+          field1: {
+            field2: {
+              field3: 'value',
+            },
+          },
+        }, 'field1.field4.field3');
+        done(new Error('Not suppose to succes'));
+      }
+      catch (err) {
+        expect(err).to.be.an.instanceof(Error)
+          .and.have.property('message', 'Invalid path field1.field4.field3 (field4)');
+        done();
+      }
+    });
+    it('should throw `Invalid path` Error using syntactic sugar 2/2', (done) => {
+      try {
+        parseProperties([{
+          field: 'value1',
+        }, {
+          field1: 'value2',
+        }, {
+          field: 'value3',
+        },
+        ], 'field');
         done(new Error('Not suppose to succes'));
       }
       catch (err) {
