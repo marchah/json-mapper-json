@@ -5,7 +5,7 @@
   "main": "./index.js",
   "description": "JsonMapper",
   "scripts": {
-    "test": "NODE_ENV=test node --harmony ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/mocha"
+    "test": "NODE_ENV=test node --harmony ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "chai": "^3.3.0",
     "eslint": "^1.0.0",
     "istanbul": "^0.4.1",
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.3",
+    "rewire": "^2.5.1"
   }
 }
