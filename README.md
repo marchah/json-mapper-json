@@ -200,4 +200,5 @@ jsonMapper([{
 
 TODO
 ----
-* manage type field
+* manage `type` property
+* add `required` property
