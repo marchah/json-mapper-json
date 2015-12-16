@@ -608,4 +608,4 @@ describe('OLD UNIT TEST', () => {
       expect(jsonMapper(null, null)).to.eql({});
     });
   });
-})
+});

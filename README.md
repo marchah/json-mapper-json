@@ -1,5 +1,9 @@
 # json-mapper-json
 
+Note
+----
+this lib is very usefull when you have well design models and have to communicate with ugly webservices.
+
 Usage
 -----
 ````javascript
@@ -201,4 +205,3 @@ jsonMapper([{
 TODO
 ----
 * manage `type` property
-* add `required` property
