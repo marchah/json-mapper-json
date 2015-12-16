@@ -174,7 +174,8 @@ jsonMapper([{
 });
 ````
 
-template:
+Template Syntax:
+----------------
 ````javascript
 {
   newFieldName1: {
