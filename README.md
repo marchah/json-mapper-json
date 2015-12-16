@@ -1,6 +1,6 @@
 # json-mapper-json
 
-````
+````javascript
 const jsonMapper = require('json-mapper-json');
 
 jsonMapper(data<Object>, template<Object>) => Promise
@@ -10,7 +10,7 @@ Exemple
 
 Basic
 -----
-```
+```javascript
 jsonMapper({
   field: 'value',
 }, {
@@ -27,7 +27,7 @@ jsonMapper({
 ```
 Basic with nested
 ---------------------
-```
+```javascript
 jsonMapper({
   field1: {
     field2: {
@@ -60,7 +60,7 @@ jsonMapper({
 ```
 Basic with formatting
 ---------------------
-```
+```javascript
 jsonMapper({
   field1: {
     field2: {
@@ -82,7 +82,7 @@ jsonMapper({
 ```
 Array
 -----
-````
+````javascript
 jsonMapper([{
   field: 'value1',
 }, {
@@ -107,7 +107,7 @@ jsonMapper([{
 
 Array with formatting
 ---------------------
-````
+````javascript
 jsonMapper([{
   field: 'value1',
 }, {
@@ -133,7 +133,7 @@ jsonMapper([{
 
 Usage of the syntactic sugar for `path`
 ---------------------------------------
-```
+```javascript
 jsonMapper({
   field: 'value',
 }, {
@@ -148,7 +148,7 @@ jsonMapper({
 ```
 Array with nested and `path` syntactic sugar
 --------------------------------------------
-````
+````javascript
 jsonMapper([{
   field: {'nested_field': 'value1'},
 }, {
@@ -175,7 +175,7 @@ jsonMapper([{
 ````
 
 template:
-````
+````javascript
 {
   newFieldName1: {
     path: <String>, // required
@@ -190,7 +190,7 @@ template:
       },
     },
   },
-  newFieldName2: <String> (it's the path, syntactic sugar for {path: ''})
+  newFieldName2: <String> // (it's the path, syntactic sugar for {path: ''})
   ...
 }
 ````
