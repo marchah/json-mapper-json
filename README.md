@@ -1,11 +1,13 @@
 # json-mapper-json
 
+Usage
+-----
 ````javascript
 const jsonMapper = require('json-mapper-json');
 
 jsonMapper(data<Object>, template<Object>) => Promise
 ````
-Template Syntax:
+Template Syntax
 ----------------
 ````javascript
 {
