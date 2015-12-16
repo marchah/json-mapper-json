@@ -179,6 +179,7 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
+
   it('basic using syntactic sugar 1/2', (done) => {
     fct({
       field: 'value',
@@ -200,6 +201,102 @@ function unitTestForJsonMapper(fct) {
       'new_field': 'field1.field2.field3',
     }).then((result) => {
       expect(result).to.eql({'new_field': 'value'});
+      done();
+    });
+  });
+  it('basic with nested 1/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field': {
+            path: 'field3',
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': {'nested_field': 'value'}});
+      done();
+    });
+  });
+  it('basic with nested 2/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+          field4: 'value4',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field1': {
+            path: 'field3',
+          },
+          'nested_field2': {
+            path: 'field4',
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'new_field': {
+          'nested_field1': 'value',
+          'nested_field2': 'value4',
+        },
+      });
+      done();
+    });
+  });
+  it('basic with syntactic sugar nested 1/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field': 'field3',
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': {'nested_field': 'value'}});
+      done();
+    });
+  });
+  it('basic with syntactic sugar nested 2/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+          field4: 'value4',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field1': 'field3',
+          'nested_field2': 'field4',
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'new_field': {
+          'nested_field1': 'value',
+          'nested_field2': 'value4',
+        },
+      });
       done();
     });
   });
@@ -249,6 +346,48 @@ function unitTestForJsonMapper(fct) {
       'new_field': 'field',
     }).then((result) => {
       expect(result).to.eql([{'new_field': 'value1'}, {'new_field': 'value2'}, {'new_field': 'value3'}]);
+      done();
+    });
+  });
+  it('array with nested', (done) => {
+    fct([{
+      field: {'nested_field': 'value1'},
+    }, {
+      field: {'nested_field': 'value2'},
+    }, {
+      field: {'nested_field': 'value3'},
+    },
+    ], {
+      'new_field': {
+        path: 'field',
+        nested: {
+          'new_nested_field': {
+            path: 'nested_field',
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql([{'new_field': {'new_nested_field': 'value1'}}, {'new_field': {'new_nested_field': 'value2'}}, {'new_field': {'new_nested_field': 'value3'}}]);
+      done();
+    });
+  });
+  it('array with nested using syntactic sugar', (done) => {
+    fct([{
+      field: {'nested_field': 'value1'},
+    }, {
+      field: {'nested_field': 'value2'},
+    }, {
+      field: {'nested_field': 'value3'},
+    },
+    ], {
+      'new_field': {
+        path: 'field',
+        nested: {
+          'new_nested_field': 'nested_field',
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql([{'new_field': {'new_nested_field': 'value1'}}, {'new_field': {'new_nested_field': 'value2'}}, {'new_field': {'new_nested_field': 'value3'}}]);
       done();
     });
   });
