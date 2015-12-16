@@ -5,6 +5,28 @@ const jsonMapper = require('json-mapper-json');
 
 jsonMapper(data<Object>, template<Object>) => Promise
 ````
+Template Syntax:
+----------------
+````javascript
+{
+  newFieldName1: {
+    path: <String>, // required
+    formatting: <Function> // optional (ex: function(value) {return value + '_formatted';})
+    type: <NativeType> // optional (ex: String, Number, Boolean, ...) (not supported yet)
+    nested: { <Object> // optional
+      newNestedFieldName: <String>,
+      formatting: <Function> // optional
+      type: <NativeType> // optional (ex: String, Number, Boolean, ...) (not supported yet)
+      nested: { <Object> // optional
+        ...
+      },
+    },
+  },
+  newFieldName2: <String> // (it's the path, syntactic sugar for {path: ''})
+  ...
+}
+````
+
 Exemple
 =======
 
@@ -172,28 +194,6 @@ jsonMapper([{
   ]
   */
 });
-````
-
-Template Syntax:
-----------------
-````javascript
-{
-  newFieldName1: {
-    path: <String>, // required
-    formatting: <Function> // optional (ex: function(value) {return value + '_formatted';})
-    type: <NativeType> // optional (ex: String, Number, Boolean, ...) (not supported yet)
-    nested: { <Object> // optional
-      newNestedFieldName: <String>,
-      formatting: <Function> // optional
-      type: <NativeType> // optional (ex: String, Number, Boolean, ...) (not supported yet)
-      nested: { <Object> // optional
-        ...
-      },
-    },
-  },
-  newFieldName2: <String> // (it's the path, syntactic sugar for {path: ''})
-  ...
-}
 ````
 
 TODO
