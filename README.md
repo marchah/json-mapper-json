@@ -33,7 +33,7 @@ Template Syntax
 }
 ````
 
-Exemple
+Example
 =======
 
 Basic
