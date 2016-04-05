@@ -1,11 +1,11 @@
 {
-  "name": "JsonMapperJson",
+  "name": "json-mapper-json",
   "version": "0.0.1",
   "private": true,
   "main": "./index.js",
   "description": "JsonMapper",
   "scripts": {
-    "test": "jasmine"
+    "test": "NODE_ENV=test node --harmony ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -17,17 +17,17 @@
     "mapping"
   ],
   "dependencies": {
-    "babel": "^5.6.23",
+    "bluebird": "^2.10.1",
     "mongoose": "^4.1.3",
-    "lodash": "^3.10.0",
-    "when": "^3.7.3"
+    "lodash": "^3.10.0"
   },
   "author": "marchah <marchah.dev@gmail.com>",
   "devDependencies": {
+    "babel": "^5.8.23",
+    "chai": "^3.3.0",
     "eslint": "^1.0.0",
-    "nodemon": "^1.3.7"
-  },
-  "engines": {
-    "iojs": ">= 2.4.0"
+    "istanbul": "^0.4.1",
+    "mocha": "^2.3.3",
+    "rewire": "^2.5.1"
   }
 }
