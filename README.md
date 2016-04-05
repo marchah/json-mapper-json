@@ -1,6 +1,14 @@
 # json-mapper-json
 
-Simple library to convert a json object into a new json object formatted by a template. 
+Simple library to convert a json object into a new json object formatted by a template.
+
+## Installation
+
+Install via [npm](https://www.npmjs.com/):
+
+```
+$ npm install json-mapper-json
+```
 
 ## Documentation
 
