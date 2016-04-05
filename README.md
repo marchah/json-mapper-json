@@ -212,3 +212,7 @@ this library is very usefull when you have well design models and have to commun
 ## TODO
 
 * manage `type` property
+
+## Contributing
+
+This project is a work in progress and subject to API changes, please feel free to contribute
