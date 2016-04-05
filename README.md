@@ -1,18 +1,20 @@
 # json-mapper-json
 
-Note
-----
-this lib is very usefull when you have well design models and have to communicate with horrible webservices.
+Simple library to convert a json object into a new json object formatted by a template. 
 
-Usage
------
+## Documentation
+
+
+### Usage
+
 ````javascript
 const jsonMapper = require('json-mapper-json');
 
-jsonMapper(data<Object>, template<Object>) => Promise
+jsonMapper(json<Object>, template<Object>) => Promise
 ````
-Template Syntax
-----------------
+
+### Template Syntax Explanations
+
 ````javascript
 {
   newFieldName1: {
@@ -33,11 +35,9 @@ Template Syntax
 }
 ````
 
-Example
-=======
+## Example
 
-Basic
------
+### Basic
 ```javascript
 jsonMapper({
   field: 'value',
@@ -53,8 +53,9 @@ jsonMapper({
   */
 });
 ```
-Basic with nested
----------------------
+
+### Basic with nested
+
 ```javascript
 jsonMapper({
   field1: {
@@ -86,8 +87,9 @@ jsonMapper({
   */
 });
 ```
-Basic with formatting
----------------------
+
+### Basic with formatting
+
 ```javascript
 jsonMapper({
   field1: {
@@ -108,8 +110,9 @@ jsonMapper({
   */
 });
 ```
-Array
------
+
+### Array
+
 ````javascript
 jsonMapper([{
   field: 'value1',
@@ -133,8 +136,8 @@ jsonMapper([{
 });
 ````
 
-Array with formatting
----------------------
+### Array with formatting
+
 ````javascript
 jsonMapper([{
   field: 'value1',
@@ -159,8 +162,8 @@ jsonMapper([{
 });
 ````
 
-Usage of the syntactic sugar for `path`
----------------------------------------
+### Usage of the syntactic sugar for `path`
+
 ```javascript
 jsonMapper({
   field: 'value',
@@ -174,8 +177,8 @@ jsonMapper({
   */
 });
 ```
-Array with nested and `path` syntactic sugar
---------------------------------------------
+### Array with nested and `path` syntactic sugar
+
 ````javascript
 jsonMapper([{
   field: {'nested_field': 'value1'},
@@ -202,6 +205,14 @@ jsonMapper([{
 });
 ````
 
-TODO
-----
+## Note
+
+this library is very usefull when you have well design models and have to communicate with horrible webservices.
+
+## TODO
+
 * manage `type` property
+
+## Contributing
+
+This project is a work in progress and subject to API changes, please feel free to contribute
