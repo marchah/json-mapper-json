@@ -1,33 +1,43 @@
 {
   "name": "json-mapper-json",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.9.0",
   "main": "./index.js",
-  "description": "JsonMapper",
+  "description": "convert json object into a new formatted json object",
   "scripts": {
     "test": "NODE_ENV=test node --harmony ./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha"
+  },
+  "keywords": [
+    "json",
+    "mapper",
+    "mapping",
+    "formatting",
+    "format"
+  ],
+  "author": "marchah <marchah.dev@gmail.com>",
+  "dependencies": {
+    "bluebird": "^3.3.4",
+    "lodash": "^4.6.1"
+  },
+  "author": "marchah <marchah.dev@gmail.com>",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.5.3",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
+    "mongoose": "^4.4.10",
+    "rewire": "^2.5.1"
+  },
+  "engines": {
+    "node": ">=4.1.0",
+    "iojs": ">= 2.4.0"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/marchah/json-mapper-json.git"
   },
-  "keywords": [
-    "json",
-    "mapper",
-    "mapping"
-  ],
-  "dependencies": {
-    "bluebird": "^2.10.1",
-    "mongoose": "^4.1.3",
-    "lodash": "^3.10.0"
+  "bugs": {
+    "url": "https://github.com/marchah/json-mapper-json/issues"
   },
-  "author": "marchah <marchah.dev@gmail.com>",
-  "devDependencies": {
-    "babel": "^5.8.23",
-    "chai": "^3.3.0",
-    "eslint": "^1.0.0",
-    "istanbul": "^0.4.1",
-    "mocha": "^2.3.3",
-    "rewire": "^2.5.1"
-  }
+  "homepage": "https://github.com/marchah/json-mapper-json",
+  "license": "MIT"
 }
