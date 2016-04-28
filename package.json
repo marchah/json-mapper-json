@@ -15,8 +15,8 @@
   ],
   "author": "marchah <marchah.dev@gmail.com>",
   "dependencies": {
-    "bluebird": "^3.3.4",
-    "lodash": "^4.6.1",
+    "bluebird": "^3.3.5",
+    "lodash": "^4.11.1",
     "bson": "*"
   },
   "author": "marchah <marchah.dev@gmail.com>",
