@@ -3,7 +3,7 @@ const rewire = require('rewire');
 const expect = require('chai').expect;
 const Promise = require('bluebird');
 
-const ObjectId = require('mongoose').Schema.ObjectId;
+const ObjectId = require('bson').ObjectID;
 
 const JsonMapper = rewire('../lib/json-mapper.js');
 const getSettings = JsonMapper.__get__('getSettings');
