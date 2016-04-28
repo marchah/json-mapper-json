@@ -1,6 +1,6 @@
 {
   "name": "json-mapper-json",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "main": "./index.js",
   "description": "convert json object into a new formatted json object",
   "scripts": {
@@ -19,7 +19,6 @@
     "lodash": "^4.11.1",
     "bson": "*"
   },
-  "author": "marchah <marchah.dev@gmail.com>",
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^2.5.3",
