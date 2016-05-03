@@ -15,15 +15,15 @@ $ npm install json-mapper-json
 
 ### Usage
 
-````javascript
+```javascript
 const jsonMapper = require('json-mapper-json');
 
 jsonMapper(json<Object>, template<Object>) => Promise
-````
+```
 
 ### Template Syntax Explanations
 
-````javascript
+```javascript
 {
   newFieldName1: {
     path: <String>, // required
@@ -41,7 +41,7 @@ jsonMapper(json<Object>, template<Object>) => Promise
   newFieldName2: <String> // (it's the path, syntactic sugar for {path: ''})
   ...
 }
-````
+```
 
 ## Example
 
@@ -55,7 +55,7 @@ jsonMapper({
   },
 }).then((result) => {
   /*
-  result: {
+  result === {
     'new_field': 'value',
   }
   */
@@ -86,7 +86,7 @@ jsonMapper({
   },
 }).then((result) => {
   /*
-  result: {
+  result === {
     'new_field': {
       'nested_field1': 'value',
       'nested_field2': 'value4',
@@ -112,7 +112,7 @@ jsonMapper({
   },
 }).then((result) => {
   /*
-  result: {
+  result === {
     'new_field': 'value_formatted',
   }
   */
@@ -121,7 +121,7 @@ jsonMapper({
 
 ### Array
 
-````javascript
+```javascript
 jsonMapper([{
   field: 'value1',
 }, {
@@ -135,18 +135,18 @@ jsonMapper([{
   },
 }).then((result) => {
   /*
-  result: [
+  result === [
     {'new_field': 'value1'},
     {'new_field': 'value2'},
     {'new_field': 'value3'},
   ]
   */
 });
-````
+```
 
 ### Array with formatting
 
-````javascript
+```javascript
 jsonMapper([{
   field: 'value1',
 }, {
@@ -161,14 +161,14 @@ jsonMapper([{
   },
 }).then((result) => {
   /*
-  result: [
+  result === [
     {'new_field': 'value1_formatted'},
     {'new_field': 'value2_formatted'},
     {'new_field': 'value3_formatted'},
   ]
   */
 });
-````
+```
 
 ### Usage of the syntactic sugar for `path`
 
@@ -179,7 +179,7 @@ jsonMapper({
   'new_field': 'field',
 }).then((result) => {
   /*
-  result: {
+  result === {
     'new_field': 'value',
   }
   */
@@ -187,7 +187,7 @@ jsonMapper({
 ```
 ### Array with nested and `path` syntactic sugar
 
-````javascript
+```javascript
 jsonMapper([{
   field: {'nested_field': 'value1'},
 }, {
@@ -204,15 +204,56 @@ jsonMapper([{
   },
 }).then((result) => {
   /*
-  result: [
+  result === [
     {'new_field': {'new_nested_field': 'value1'}},
     {'new_field': {'new_nested_field': 'value2'}},
     {'new_field': {'new_nested_field': 'value3'}},
   ]
   */
 });
-````
+```
 
+### Usage of the key word `$root` for `path`
+
+```javascript
+jsonMapper({
+  'content': {
+    'result': [
+      {
+        'courseStatisticsDto': {
+          'times': 3,
+          'persons': 1,
+          'courseCode': '',
+        },
+        'courseAddressDto': {},
+        'endDate': 1460590552000,
+        'startDate': 1460590552000,
+        'name': 'Example Course',
+      },
+    ],
+    'type': 'offline',
+  },
+}, {
+  data: {
+    path: 'content.result',
+    nested: {
+      name: 'name',
+      code: 'courseStatisticsDto.courseCode',
+      type: '$root.content.type',
+    },
+  },
+}).then((result) => {
+/*
+  result === {
+    'data': [{
+      'name': 'Example Course',
+      'code': '',
+      'type': 'offline',
+    }],
+  }
+*/
+});
+```
 ## Note
 
 this library is very usefull when you have well design models and have to communicate with horrible webservices.

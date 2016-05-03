@@ -207,6 +207,34 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
+  it('basic with key word `$root` 1/2', (done) => {
+    fct({
+      field: 'value',
+    }, {
+      'new_field': {
+        path: '$root.field',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'value'});
+      done();
+    });
+  });
+  it('basic with key word `$root` 2/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: '$root.field1.field2.field3',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'value'});
+      done();
+    });
+  });
   it('basic using syntactic sugar 1/2', (done) => {
     fct({
       field: 'value',
@@ -286,6 +314,57 @@ function unitTestForJsonMapper(fct) {
           },
           'nested_field2': {
             path: 'field4',
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'new_field': {
+          'nested_field1': 'value',
+          'nested_field2': 'value4',
+        },
+      });
+      done();
+    });
+  });
+  it('basic with nested and key word `$root` 1/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field': {
+            path: '$root.field1.field2.field3',
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': {'nested_field': 'value'}});
+      done();
+    });
+  });
+  it('basic with nested and key word `$root` 2/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+          field4: 'value4',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field1': {
+            path: 'field3',
+          },
+          'nested_field2': {
+            path: '$root.field1.field2.field4',
           },
         },
       },
@@ -690,6 +769,44 @@ function unitTestForJsonMapper(fct) {
       expect(result).to.eql([{'new_field': 'value1_formatted'}, {'new_field': 'value2_formatted'}, {'new_field': 'value3_formatted'}]);
       done();
     }).catch((err) => {return done(err);});
+  });
+  it('complex test with key word `$root`', (done) => {
+    fct({
+        'content': {
+          'result': [
+            {
+              'courseStatisticsDto': {
+                'times': 3,
+                'persons': 1,
+                'courseCode': '',
+              },
+              'courseAddressDto': {},
+              'endDate': 1460590552000,
+              'startDate': 1460590552000,
+              'name': 'Example Course',
+            },
+          ],
+          'type': 'offline',
+        },
+      }, {
+      data: {
+        path: 'content.result',
+        nested: {
+          name: 'name',
+          code: 'courseStatisticsDto.courseCode',
+          type: '$root.content.type',
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'data': [{
+          'name': 'Example Course',
+          'code': '',
+          'type': 'offline',
+        }],
+      });
+      done();
+    });
   });
 }
 
