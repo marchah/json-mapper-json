@@ -531,6 +531,23 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
+  it('basic with formatting and key word `$root`', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: '$root.field1.field2.field3',
+        formatting: (value) => {return value + '_formatted';},
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'value_formatted'});
+      done();
+    });
+  });
   it('basic with formatting and required `false` 1/2', (done) => {
     fct({
       field1: {
