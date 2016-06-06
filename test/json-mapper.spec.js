@@ -653,6 +653,106 @@ function unitTestForJsonMapper(fct) {
       done();
     }).catch((err) => {done(err);});
   });
+  it('basic with formatting and nested Promise', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+          field4: 'value4',
+        },
+      },
+    }, {
+      'new_field1': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field': {
+            path: 'field3',
+            required: true,
+            formatting: (value) => {return Promise.resolve(_.isUndefined(value) ? value : (value + '_formatted'));},
+          },
+        },
+      },
+      'new_field2': {
+        path: 'field1.field2',
+        required: true,
+        nested: {
+          'nested_field': {
+            path: 'field4',
+            required: false,
+            formatting: (value) => {return Promise.resolve(_.isUndefined(value) ? value : (value + '_formatted'));},
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'new_field1': {
+          'nested_field': 'value_formatted',
+        },
+        'new_field2': {
+          'nested_field': 'value4_formatted',
+        },
+      });
+      done();
+    }).catch((err) => {done(err);});
+  });
+  it('basic with formatting that return object with nested Promise', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value3',
+          field4: 'value4',
+        },
+      },
+    }, {
+      'new_field1': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field': {
+            path: 'field3',
+            required: true,
+            formatting: (value) => {
+              return Promise.props({
+                'label': value,
+                'promise': Promise.resolve(value + '_formatted'),
+              });
+            },
+          },
+        },
+      },
+      'new_field2': {
+        path: 'field1.field2',
+        required: true,
+        nested: {
+          'nested_field': {
+            path: 'field4',
+            required: false,
+            formatting: (value) => {
+              return Promise.props({
+                'label': value,
+                'promise': Promise.resolve(value + '_formatted'),
+              });
+            },
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'new_field1': {
+          'nested_field': {
+            label: 'value3',
+            promise: 'value3_formatted',
+          }
+        },
+        'new_field2': {
+          'nested_field': {
+            label: 'value4',
+            promise: 'value4_formatted',
+          },
+        },
+      });
+      done();
+    }).catch((err) => {done(err);});
+  });
   it('array', (done) => {
     fct([{
       field: 'value1',
