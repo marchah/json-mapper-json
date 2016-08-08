@@ -2,6 +2,7 @@ const _ = require('lodash');
 const rewire = require('rewire');
 const expect = require('chai').expect;
 const Promise = require('bluebird');
+const mongoose = require('mongoose');
 
 const ObjectId = require('bson').ObjectID;
 
@@ -10,6 +11,36 @@ const getSettings = JsonMapper.__get__('getSettings');
 const getValue = JsonMapper.__get__('getValue');
 const parseProperties = JsonMapper.__get__('parseProperties');
 const jsonMapper = JsonMapper.__get__('jsonMapper');
+
+const ModelSchema = new mongoose.Schema({
+  field1: String,
+  field2: {
+    type: String,
+    required: true,
+  },
+  field3: {
+    type: String,
+    required: false,
+  },
+  nested_field1: {
+    nested_field2: {
+      nested_field3: String,
+    }
+  },
+  array1: [{
+    field: String,
+  }],
+  array2: [{
+    field: [String],
+  }],
+  array3: [{
+    field: [{
+      type: String
+    }],
+  }],
+});
+
+const Model = mongoose.model('model', ModelSchema);
 
 function unitTestForJsonMapper(fct) {
   it('should be a function', () => {
@@ -1525,6 +1556,10 @@ describe('jsonMapper', () => {
       expect(getValue({}, true)).to.eql(undefined);
       expect(getValue({}, 'string')).to.eql(undefined);
       expect(getValue({}, 41.21)).to.eql(undefined);
+      expect(getValue(new Model(), undefined)).to.eql(undefined);
+      expect(getValue(new Model(), true)).to.eql(undefined);
+      expect(getValue(new Model(), 'string')).to.eql(undefined);
+      expect(getValue(new Model(), 41.21)).to.eql(undefined);
     });
     it('basic 1/2', () => {
       expect(getValue({
@@ -1544,6 +1579,38 @@ describe('jsonMapper', () => {
         path: ['field1', 'field2', 'field3'],
       })).to.eql('value');
     });
+    it('[mongoose] basic 1/2', () => {
+      expect(getValue(new Model({
+        field1: 'value1',
+      }), {
+        path: ['field1'],
+      })).to.eql('value1');
+    });
+    it('[mongoose] basic 2/3', () => {
+      expect(getValue(new Model({
+        field2: 'value2',
+      }), {
+        path: ['field2'],
+      })).to.eql('value2');
+    });
+    it('[mongoose] basic 3/3', () => {
+      expect(getValue(new Model({
+        field3: 'value3',
+      }), {
+        path: ['field3'],
+      })).to.eql('value3');
+    });
+    it('[mongoose] basic nested', () => {
+      expect(getValue(new Model({
+        nested_field1: {
+          nested_field2: {
+            nested_field3: 'value',
+          },
+        },
+      }), {
+        path: ['nested_field1', 'nested_field2', 'nested_field3'],
+      })).to.eql('value');
+    });
     it('basic with required `false` 1/2', () => {
       expect(getValue({
         field: 'value',
@@ -1561,6 +1628,26 @@ describe('jsonMapper', () => {
         },
       }, {
         path: ['field1', 'field', 'field3'],
+        required: false,
+      })).to.eql(undefined);
+    });
+    it('[mongoose] basic with required `false` 1/2', () => {
+      expect(getValue(new Model({
+        field1: 'value',
+      }), {
+        path: ['field'],
+        required: false,
+      })).to.eql(undefined);
+    });
+    it('[mongoose] basic with required `false` 2/2', () => {
+      expect(getValue(new Model({
+        nested_field1: {
+          nested_field2: {
+            nested_field3: 'value',
+          },
+        },
+      }), {
+        path: ['nested_field1', 'field', 'nested_field3'],
         required: false,
       })).to.eql(undefined);
     });
@@ -1613,6 +1700,86 @@ describe('jsonMapper', () => {
           ['value1_1', 'value1_2', 'value1_3'],
           'value2',
           undefined,
+        ]);
+        done();
+      });
+    });
+    it('[mongoose] array 1/4', (done) => {
+      Promise.all(getValue(new Model({
+        array1: [{
+          field: 'value1',
+        }, {
+          field: 'value2',
+        }, {
+          field: 'value3',
+        },
+        ],
+      }), {
+        path: ['array1', 'field'],
+      })).then((result) => {
+        expect(result).to.eql(['value1', 'value2', 'value3']);
+        done();
+      });
+    });
+    it('[mongoose] array 2/4', (done) => {
+      Promise.all(getValue(new Model({
+        array2: [{
+          field: ['value1_1', 'value1_2', 'value1_3'],
+        }, {
+          field: ['value2'],
+        }, {
+          field: ['value3_1', 'value3_2'],
+        },
+        ],
+      }), {
+        path: ['array2', 'field'],
+      })).then((result) => {
+        expect(result).to.eql([
+          ['value1_1', 'value1_2', 'value1_3'],
+          ['value2'],
+          ['value3_1', 'value3_2'],
+        ]);
+        done();
+      });
+    });
+    it('[mongoose] array 3/4', (done) => {
+      Promise.all(getValue(new Model({
+        array2: [{
+          field: ['value1_1', 'value1_2', 'value1_3'],
+        }, {
+          field: 'value2',
+        }, {
+          field: undefined,
+        },
+        ],
+      }), {
+        path: ['array2', 'field'],
+      })).then((result) => {
+        expect(result).to.eql([
+          ['value1_1', 'value1_2', 'value1_3'],
+          ['value2'],
+          [],
+        ]);
+        done();
+      });
+    });
+    it('[mongoose] array 4/4', (done) => {
+      Promise.all(getValue(new Model({
+        array3: [{
+          field: ['value1_1', 'value1_2', 'value1_3'],
+        }, {
+          field: 'value2',
+        }, {
+          field: undefined,
+        },
+        ],
+      }), {
+        path: ['array3', 'field'],
+      })).then((result) => {
+        expect(result).to.eql([
+          ['value1_1', 'value1_2', 'value1_3'],
+          ['value2'],
+          [],
         ]);
         done();
       });
@@ -1673,6 +1840,68 @@ describe('jsonMapper', () => {
         done();
       }).catch((err) => {done(err);});
     });
+    it('[mongoose] array with required `false` 1/3', (done) => {
+      Promise.all(getValue(new Model({
+        array1: [{
+          field: 'value1',
+        }, {
+          field1: 'value2',
+        }, {
+          field: 'value3',
+        },
+        ],
+      }), {
+        path: ['array1', 'field'],
+        required: false,
+      })).then((result) => {
+        expect(result).to.eql(['value1', undefined, 'value3']);
+        done();
+      }).catch((err) => {done(err);});
+    });
+    it('[mongoose] array with required `false` 2/3', (done) => {
+      Promise.all(getValue(new Model({
+        array2: [{
+          field: ['value1_1', 'value1_2', 'value1_3'],
+        }, {
+          field: ['value2'],
+        }, {
+          field1: ['value3_1', 'value3_2'],
+        },
+        ],
+      }), {
+        path: ['array2', 'field'],
+        required: false,
+      })).then((result) => {
+        expect(result).to.eql([
+          ['value1_1', 'value1_2', 'value1_3'],
+          ['value2'],
+          [],
+        ]);
+        done();
+      }).catch((err) => {done(err);});
+    });
+    it('[mongoose] array with required `false` 3/3', (done) => {
+      Promise.all(getValue(new Model({
+        array3: [{
+          field1: ['value1_1', 'value1_2', 'value1_3'],
+        }, {
+          field: 'value2',
+        }, {
+          field: undefined,
+        },
+        ],
+      }), {
+        path: ['array3', 'field'],
+        required: false,
+      })).then((result) => {
+        expect(result).to.eql([
+          [],
+          ['value2'],
+          [],
+        ]);
+        done();
+      }).catch((err) => {done(err);});
+    });
     it('should throw `Invalid path` Error 1/2', (done) => {
       try {
         getValue({
@@ -1709,6 +1938,47 @@ describe('jsonMapper', () => {
       catch (err) {
         expect(err).to.be.an.instanceof(Error)
           .and.have.property('message', 'Invalid path field (field)');
+        done();
+      }
+    });
+    it('[mongoose] should throw `Invalid path` Error 1/2', (done) => {
+      try {
+        getValue(new Model({
+          nested_field1: {
+            nested_field2: {
+              nested_field3: 'value',
+            },
+          },
+        }), {
+          path: ['nested_field1', 'nested_field4', 'nested_field3'],
+        });
+        done(new Error('Not suppose to succes'));
+      }
+      catch (err) {
+        expect(err).to.be.an.instanceof(Error)
+          .and.have.property('message', 'Invalid path nested_field1.nested_field4.nested_field3 (nested_field4)');
+        done();
+      }
+    });
+    it('[mongoose] should throw `Invalid path` Error 2/2', (done) => {
+      try {
+        getValue(new Model({
+          array1: [{
+            field: 'value1',
+          }, {
+            field: 'value2',
+          }, {
+            field: 'value3',
+          },
+          ],
+        }), {
+          path: ['array1', 'field1'],
+        });
+        done(new Error('Not suppose to succes'));
+      }
+      catch (err) {
+        expect(err).to.be.an.instanceof(Error)
+          .and.have.property('message', 'Invalid path field1 (field1)');
         done();
       }
     });
