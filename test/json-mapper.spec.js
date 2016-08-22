@@ -210,7 +210,7 @@ function unitTestForJsonMapper(fct) {
     });
   });
 
-  it('basic 1/2', (done) => {
+  it('basic 1/4', (done) => {
     fct({
       field: 'value',
     }, {
@@ -222,7 +222,7 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
-  it('basic 2/2', (done) => {
+  it('basic 2/4', (done) => {
     fct({
       field1: {
         field2: {
@@ -238,7 +238,31 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
-  it('basic with key word `$root` 1/2', (done) => {
+  it('basic 3/4', (done) => {
+    fct({
+      field: 0,
+    }, {
+      'new_field': {
+        path: 'field',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 0});
+      done();
+    });
+  });
+  it('basic 4/4', (done) => {
+    fct({
+      field: false,
+    }, {
+      'new_field': {
+        path: 'field',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': false});
+      done();
+    });
+  });
+  it('basic with key word `$root` 1/4', (done) => {
     fct({
       field: 'value',
     }, {
@@ -250,7 +274,7 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
-  it('basic with key word `$root` 2/2', (done) => {
+  it('basic with key word `$root` 2/4', (done) => {
     fct({
       field1: {
         field2: {
@@ -263,6 +287,30 @@ function unitTestForJsonMapper(fct) {
       },
     }).then((result) => {
       expect(result).to.eql({'new_field': 'value'});
+      done();
+    });
+  });
+  it('basic with key word `$root` 3/4', (done) => {
+    fct({
+      field: 0,
+    }, {
+      'new_field': {
+        path: '$root.field',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 0});
+      done();
+    });
+  });
+  it('basic with key word `$root` 4/4', (done) => {
+    fct({
+      field: false,
+    }, {
+      'new_field': {
+        path: '$root.field',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': false});
       done();
     });
   });
