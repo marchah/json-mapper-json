@@ -16,17 +16,17 @@
   ],
   "author": "marchah <marchah.dev@gmail.com>",
   "dependencies": {
-    "bluebird": "^3.3.5",
-    "lodash": "^4.11.2",
+    "bluebird": "^3.4.6",
+    "lodash": "^4.17.2",
     "bson": "*"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "eslint": "^2.5.3",
-    "istanbul": "^0.4.2",
-    "mocha": "^2.4.5",
-    "mongoose": "^4.5.8",
-    "rewire": "^2.5.1"
+    "eslint": "^3.11.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "mongoose": "^4.7.2",
+    "rewire": "^2.5.2"
   },
   "engines": {
     "node": ">=4.1.0",
