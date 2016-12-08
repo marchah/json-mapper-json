@@ -314,6 +314,58 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
+  it('basic with key word `$item` 1/4', (done) => {
+    fct({
+      field: 'value',
+    }, {
+      'new_field': {
+        path: '$item.field',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'value'});
+      done();
+    });
+  });
+  it('basic with key word `$item` 2/4', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.$item.field2.field3',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'value'});
+      done();
+    });
+  });
+  it('basic with key word `$item` 3/4', (done) => {
+    fct({
+      field: 0,
+    }, {
+      'new_field': {
+        path: '$item.field',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 0});
+      done();
+    });
+  });
+  it('basic with key word `$item` 4/4', (done) => {
+    fct({
+      field: false,
+    }, {
+      'new_field': {
+        path: '$item.field',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': false});
+      done();
+    });
+  });
   it('basic using syntactic sugar 1/2', (done) => {
     fct({
       field: 'value',
@@ -548,6 +600,57 @@ function unitTestForJsonMapper(fct) {
       done();
     }).catch((err) => {done(err);});
   });
+  it('basic with nested and key word `$item` 1/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field': {
+            path: '$item.field3',
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': {'nested_field': 'value'}});
+      done();
+    });
+  });
+  it('basic with nested and key word `$item` 2/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+          field4: 'value4',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field1': {
+            path: 'field3',
+          },
+          'nested_field2': {
+            path: '$item.field4',
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'new_field': {
+          'nested_field1': 'value',
+          'nested_field2': 'value4',
+        },
+      });
+      done();
+    });
+  });
   it('basic with syntactic sugar nested 1/2', (done) => {
     fct({
       field1: {
@@ -620,6 +723,23 @@ function unitTestForJsonMapper(fct) {
     }, {
       'new_field': {
         path: '$root.field1.field2.field3',
+        formatting: (value) => {return value + '_formatted';},
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'value_formatted'});
+      done();
+    });
+  });
+  it('basic with formatting and key word `$item`', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.$item.field2.field3',
         formatting: (value) => {return value + '_formatted';},
       },
     }).then((result) => {
@@ -849,6 +969,23 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
+  it('array with key word `$item`', (done) => {
+    fct([{
+      field: 'value1',
+    }, {
+      field: 'value2',
+    }, {
+      field: 'value3',
+    },
+    ], {
+      'new_field': {
+        path: '$item.field',
+      },
+    }).then((result) => {
+      expect(result).to.eql([{'new_field': 'value1'}, {'new_field': 'value2'}, {'new_field': 'value3'}]);
+      done();
+    });
+  });
   it('array with required `false`', (done) => {
     fct([{
       field: 'value1',
@@ -901,6 +1038,50 @@ function unitTestForJsonMapper(fct) {
       },
     }).then((result) => {
       expect(result).to.eql([{'new_field': {'new_nested_field': 'value1'}}, {'new_field': {'new_nested_field': 'value2'}}, {'new_field': {'new_nested_field': 'value3'}}]);
+      done();
+    });
+  });
+  it('array with nested and key word `$item`', (done) => {
+    fct({
+      array: [{
+        field1: 'value11',
+        field2: 'value21',
+        field3: 'value31',
+      }, {
+        field1: 'value12',
+        field2: 'value22',
+        field3: 'value32',
+      }, {
+        field1: 'value13',
+        field2: 'value23',
+        field3: 'value33',
+      }],
+    }, {
+      'new_field': {
+        path: 'array',
+        nested: {
+          'new_field1': {
+            path: 'field1',
+          },
+          'new_field2': {
+            path: '$item',
+            formatting: (value) => (`${value.field2}/${value.field3}`),
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        new_field: [{
+          new_field1: 'value11',
+          new_field2: 'value21/value31'
+        }, {
+          new_field1: 'value12',
+          new_field2: 'value22/value32'
+        }, {
+          new_field1: 'value13',
+          new_field2: 'value23/value33'
+        }]
+      });
       done();
     });
   });
