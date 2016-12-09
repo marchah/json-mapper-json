@@ -43,6 +43,10 @@ jsonMapper(json<Object>, template<Object>) => Promise
 }
 ```
 
+### Path Key Words
+* `$root`: give possibility to access the root given object in a nested path.
+* `$item`: give possibility to access of the all item of an array in a nested path.
+
 ## Example
 
 ### Basic
@@ -254,6 +258,46 @@ jsonMapper({
 */
 });
 ```
+
+### Usage of the key word `$item` for `path`
+
+```javascript
+jsonMapper({
+	hits: {
+		total: 1,
+		hits: [{
+			_index: 'some_index',
+			_type: 'some_type',
+			_id: '123456',
+			_score: 1,
+			_source: {
+				id: 123456
+			},
+		}],
+	},
+}, {
+	hits: {
+		path: 'hits.hits',
+		nested: {
+			id: '_source.id',
+			type: {
+				path: '$item',
+				formatting: (value) => (`${value._index}/${value._type}`),
+			},
+		},
+	},
+}).then((result) => {
+/*
+  result === {
+    'hits': [{
+      'id': 123456,
+      'type': 'some_index/some_type',
+    }],
+  }
+*/
+});
+```
+
 ## Note
 
 this library is very usefull when you have well design models and have to communicate with horrible webservices.
