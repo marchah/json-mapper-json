@@ -1147,6 +1147,36 @@ function unitTestForJsonMapper(fct) {
       done();
     }).catch((err) => {return done(err);});
   });
+  it('array with formatting and key word `$item`', (done) => {
+    fct({  
+      hits: {
+        total: 1,
+        hits: [{
+          _index: 'some_index',
+          _type: 'some_type',
+          _id: '123456',
+          _score: 1,
+          _source: {
+            id: 123456
+          },
+        }],
+      },
+    }, {
+      hits: {
+        path: 'hits.hits',
+        nested: {
+          id: '_source.id',
+          type: {
+            path: '$item',
+            formatting: (value) => (`${value._index}/${value._type}`),
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({ hits: [{ id: 123456, type: 'some_index/some_type' }] });
+      done();
+    });
+  });
   it('complex test with key word `$root`', (done) => {
     fct({
         'content': {
@@ -1182,36 +1212,6 @@ function unitTestForJsonMapper(fct) {
           'type': 'offline',
         }],
       });
-      done();
-    });
-  });
-  it('complex test with key word `$item`', (done) => {
-    fct({  
-      hits: {
-        total: 1,
-        hits: [{
-          _index: 'some_index',
-          _type: 'some_type',
-          _id: '123456',
-          _score: 1,
-          _source: {
-            id: 123456
-          },
-        }],
-      },
-    }, {
-      hits: {
-        path: 'hits.hits',
-        nested: {
-          id: '_source.id',
-          type: {
-            path: '$item',
-            formatting: (value) => (`${value._index}/${value._type}`),
-          },
-        },
-      },
-    }).then((result) => {
-      expect(result).to.eql({ hits: [{ id: 123456, type: 'some_index/some_type' }] });
       done();
     });
   });
