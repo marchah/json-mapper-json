@@ -1065,7 +1065,11 @@ function unitTestForJsonMapper(fct) {
           },
           'new_field2': {
             path: '$item',
-            formatting: (value) => (`${value.field2}/${value.field3}`),
+            nested: {
+              'item1': 'field1',
+              'item2': 'field2',
+              'item3': 'field3',
+            },
           },
         },
       },
@@ -1073,13 +1077,25 @@ function unitTestForJsonMapper(fct) {
       expect(result).to.eql({
         new_field: [{
           new_field1: 'value11',
-          new_field2: 'value21/value31'
+          new_field2: {
+            item1: 'value11',
+            item2: 'value21',
+            item3: 'value31',
+          },
         }, {
           new_field1: 'value12',
-          new_field2: 'value22/value32'
+          new_field2: {
+            item1: 'value12',
+            item2: 'value22',
+            item3: 'value32',
+          },
         }, {
           new_field1: 'value13',
-          new_field2: 'value23/value33'
+          new_field2: {
+            item1: 'value13',
+            item2: 'value23',
+            item3: 'value33',
+          },
         }]
       });
       done();
@@ -1147,7 +1163,51 @@ function unitTestForJsonMapper(fct) {
       done();
     }).catch((err) => {return done(err);});
   });
-  it('array with formatting and key word `$item`', (done) => {
+  it('array with formatting and key word `$item` 1/2', (done) => {
+    fct({
+      array: [{
+        field1: 'value11',
+        field2: 'value21',
+        field3: 'value31',
+      }, {
+        field1: 'value12',
+        field2: 'value22',
+        field3: 'value32',
+      }, {
+        field1: 'value13',
+        field2: 'value23',
+        field3: 'value33',
+      }],
+    }, {
+      'new_field': {
+        path: 'array',
+        nested: {
+          'new_field1': {
+            path: 'field1',
+          },
+          'new_field2': {
+            path: '$item',
+            formatting: (value) => (`${value.field2}/${value.field3}`),
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        new_field: [{
+          new_field1: 'value11',
+          new_field2: 'value21/value31'
+        }, {
+          new_field1: 'value12',
+          new_field2: 'value22/value32'
+        }, {
+          new_field1: 'value13',
+          new_field2: 'value23/value33'
+        }]
+      });
+      done();
+    });
+  });
+  it('array with formatting and key word `$item` 2/2', (done) => {
     fct({  
       hits: {
         total: 1,
