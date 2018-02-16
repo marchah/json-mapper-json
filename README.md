@@ -27,10 +27,12 @@ jsonMapper(json<Object>, template<Object>) => Promise
 {
   newFieldName1: {
     path: <String>, // required
+    required: <Boolean> // not required, default `true`
     formatting: <Function> // optional (ex: function(value) {return value + '_formatted';})
     type: <NativeType> // optional (ex: String, Number, Boolean, ...) (not supported yet)
     nested: { <Object> // optional
       newNestedFieldName: <String>,
+      required: <Boolean> // not required, default `true`
       formatting: <Function> // optional
       type: <NativeType> // optional (ex: String, Number, Boolean, ...) (not supported yet)
       nested: { <Object> // optional
@@ -62,6 +64,47 @@ jsonMapper({
   result === {
     'new_field': 'value',
   }
+  */
+});
+```
+
+### Basic with `required`
+```javascript
+jsonMapper({
+  field1: 'value1',
+}, {
+  'new_field1': {
+    path: 'field1',
+  },
+  'new_field2': {
+    path: 'field2',
+    required: false,
+  },
+}).then((result) => {
+  /*
+  result === {
+    'new_field1': 'value1',
+  }
+  */
+});
+```
+
+```javascript
+jsonMapper({
+  field1: 'value1',
+  nested: {
+    field3: 'value3',  
+  },
+}, {
+  'new_field1': {
+    path: 'field1',
+  },
+  'new_field2': {
+    path: 'field2',
+  },
+}).then((result) => {
+  /*
+  throw Error: Invalid path nested.field2 (field2)
   */
 });
 ```
