@@ -204,14 +204,14 @@ jsonMapper([{
 ], {
   'new_field': {
     path: 'field',
-    formatting: (value) => {return value + '_formatted';},
+    formatting: (value, index) => (`${value}_formatted_${index}`),
   },
 }).then((result) => {
   /*
   result === [
-    {'new_field': 'value1_formatted'},
-    {'new_field': 'value2_formatted'},
-    {'new_field': 'value3_formatted'},
+    {'new_field': 'value1_formatted_0'},
+    {'new_field': 'value2_formatted_1'},
+    {'new_field': 'value3_formatted_2'},
   ]
   */
 });
@@ -325,7 +325,7 @@ jsonMapper({
 			id: '_source.id',
 			type: {
 				path: '$item',
-				formatting: (value) => (`${value._index}/${value._type}`),
+				formatting: (value, index) => (`${value._index}/${value._type}/${index}`),
 			},
 		},
 	},
@@ -334,7 +334,7 @@ jsonMapper({
   result === {
     'hits': [{
       'id': 123456,
-      'type': 'some_index/some_type',
+      'type': 'some_index/some_type/0',
     }],
   }
 */
