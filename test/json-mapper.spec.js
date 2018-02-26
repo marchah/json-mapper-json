@@ -1156,10 +1156,10 @@ function unitTestForJsonMapper(fct) {
     ], {
       'new_field': {
         path: 'field',
-        formatting: (value) => {return value + '_formatted';},
+        formatting: (value, index) => (`${value}_formatted_${index}`),
       },
     }).then((result) => {
-      expect(result).to.eql([{'new_field': 'value1_formatted'}, {'new_field': 'value2_formatted'}, {'new_field': 'value3_formatted'}]);
+      expect(result).to.eql([{'new_field': 'value1_formatted_0'}, {'new_field': 'value2_formatted_1'}, {'new_field': 'value3_formatted_2'}]);
       done();
     }).catch((err) => {return done(err);});
   });
@@ -1187,7 +1187,7 @@ function unitTestForJsonMapper(fct) {
           },
           'new_field2': {
             path: '$item',
-            formatting: (value) => (`${value.field2}/${value.field3}`),
+            formatting: (value, index) => (`${value.field2}/${value.field3}/${index}`),
           },
         },
       },
@@ -1195,13 +1195,13 @@ function unitTestForJsonMapper(fct) {
       expect(result).to.eql({
         new_field: [{
           new_field1: 'value11',
-          new_field2: 'value21/value31'
+          new_field2: 'value21/value31/0'
         }, {
           new_field1: 'value12',
-          new_field2: 'value22/value32'
+          new_field2: 'value22/value32/1'
         }, {
           new_field1: 'value13',
-          new_field2: 'value23/value33'
+          new_field2: 'value23/value33/2'
         }]
       });
       done();
@@ -1228,12 +1228,12 @@ function unitTestForJsonMapper(fct) {
           id: '_source.id',
           type: {
             path: '$item',
-            formatting: (value) => (`${value._index}/${value._type}`),
+            formatting: (value, index) => (`${value._index}/${value._type}/${index}`),
           },
         },
       },
     }).then((result) => {
-      expect(result).to.eql({ hits: [{ id: 123456, type: 'some_index/some_type' }] });
+      expect(result).to.eql({ hits: [{ id: 123456, type: 'some_index/some_type/0' }] });
       done();
     });
   });
@@ -2431,9 +2431,9 @@ describe('jsonMapper', () => {
       },
       ], {
         path: 'field',
-        formatting: (value) => {return value + '_formatted';},
+        formatting: (value, index) => (`${value}_formatted_${index}`),
       }).then((result) => {
-        expect(result).to.eql(['value1_formatted', 'value2_formatted', 'value3_formatted']);
+        expect(result).to.eql(['value1_formatted_0', 'value2_formatted_1', 'value3_formatted_2']);
         done();
       }).catch((err) => {return done(err);});
     });
@@ -2463,10 +2463,10 @@ describe('jsonMapper', () => {
       },
       ], {
         path: 'field',
-        formatting: (value) => {return _.isUndefined(value) ? 'not_formatted' : (value + '_formatted');},
+        formatting: (value, index) => (_.isUndefined(value) ? `not_formatted_${index}` : (`${value}_formatted_${index}`)),
         required: false,
       }).then((result) => {
-        expect(result).to.eql(['value1_formatted', 'not_formatted', 'value3_formatted']);
+        expect(result).to.eql(['value1_formatted_0', 'not_formatted_1', 'value3_formatted_2']);
         done();
       }).catch((err) => {return done(err);});
     });
