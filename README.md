@@ -48,6 +48,7 @@ jsonMapper(json<Object>, template<Object>) => Promise
 ### Path Key Words
 * `$root`: give possibility to access the root given object in a nested path.
 * `$item`: give possibility to access of the all item of an array in a nested path.
+* `$empty`: give possibility to create skip path, to create empty object to be able to merge paths (see example).
 
 ## Example
 
@@ -340,6 +341,48 @@ jsonMapper({
 */
 });
 ```
+
+### Usage of the key word `$empty` for `path`
+
+```javascript
+jsonMapper({
+  field1: {
+    field2: {
+      field3: 0
+    },
+    field4: {
+      field5: ['value1', 'value2'],
+    },
+  },
+}, {
+  'new_field1': {
+    path: 'field1',
+    nested: {
+      'new_field2': {
+        path: '$empty',
+        nested: {
+          new_field3: {
+            path: 'field2.field3'
+          },
+          new_field4: {
+            path: 'field4.field5',
+          },
+        },
+      },
+    },
+  },
+}).then((result) => {
+  /*
+  {
+    new_field1: {
+      new_field2: {
+        new_field3: 0,
+        new_field4: ['value1', 'value2'],
+      },
+    },
+  }
+  */
+});
 
 ## Note
 
