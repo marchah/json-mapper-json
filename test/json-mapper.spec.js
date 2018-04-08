@@ -683,6 +683,45 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
+  it('basic with nested and key word `$empty`', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 0
+        },
+        field4: {
+          field5: ['value1', 'value2'],
+        },
+      },
+    }, {
+      'new_field1': {
+        path: 'field1',
+        nested: {
+          'new_field2': {
+            path: '$empty',
+            nested: {
+              new_field3: {
+                path: 'field2.field3'
+              },
+              new_field4: {
+                path: 'field4.field5',
+              },
+            },
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        new_field1: {
+          new_field2: {
+            new_field3: 0,
+            new_field4: ['value1', 'value2'],
+          },
+        },
+      });
+      done();
+    });
+  });
   it('basic with syntactic sugar nested 1/2', (done) => {
     fct({
       field1: {
