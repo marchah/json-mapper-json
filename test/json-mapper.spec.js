@@ -1683,7 +1683,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1693,7 +1693,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1703,7 +1703,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1713,7 +1713,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1723,7 +1723,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path1', 'path2', 'path3'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1733,7 +1733,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path1', 'path2', 'path3'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1778,7 +1778,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: String,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1788,7 +1788,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: String,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1798,7 +1798,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: String,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1808,7 +1808,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Boolean,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1818,7 +1818,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: String,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1828,7 +1828,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Number,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1838,7 +1838,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Date,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1848,7 +1848,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Array,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1858,7 +1858,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Object,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -1868,7 +1868,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: ObjectId,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2014,7 +2014,7 @@ describe('jsonMapper', () => {
         expect(ret.nested).to.eql(null);
         expect(ret.path).to.eql(['path']);
         expect(ret.type).to.eql(null);
-        expect(ret.defaultValue).to.eql(null);
+        expect(ret.defaultValue).to.eql(undefined);
         expect(ret.required).to.eql(true);
       });
       it('should validate formatting keyword case 2/3', () => {
@@ -2025,7 +2025,7 @@ describe('jsonMapper', () => {
         expect(ret.nested).to.eql(null);
         expect(ret.path).to.eql(['path']);
         expect(ret.type).to.eql(null);
-        expect(ret.defaultValue).to.eql(null);
+        expect(ret.defaultValue).to.eql(undefined);
         expect(ret.required).to.eql(true);
       });
       it('should validate formatting keyword case 3/3', () => {
@@ -2036,7 +2036,7 @@ describe('jsonMapper', () => {
         expect(ret.nested).to.eql(null);
         expect(ret.path).to.eql(['path']);
         expect(ret.type).to.eql(null);
-        expect(ret.defaultValue).to.eql(null);
+        expect(ret.defaultValue).to.eql(undefined);
         expect(ret.required).to.eql(true);
       });
     });
@@ -2047,7 +2047,7 @@ describe('jsonMapper', () => {
           nested: {},
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2057,7 +2057,7 @@ describe('jsonMapper', () => {
           nested: {},
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2067,7 +2067,7 @@ describe('jsonMapper', () => {
           nested: {},
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2163,7 +2163,7 @@ describe('jsonMapper', () => {
           nested: {},
           path: ['path'],
           type: Object,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2173,7 +2173,7 @@ describe('jsonMapper', () => {
           nested: {},
           path: ['path'],
           type: Array,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2215,7 +2215,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2225,7 +2225,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2235,7 +2235,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2247,7 +2247,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2257,7 +2257,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2267,7 +2267,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2277,7 +2277,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2287,7 +2287,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2297,7 +2297,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: true,
         });
       });
@@ -2307,7 +2307,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
-          defaultValue: null,
+          defaultValue: undefined,
           required: false,
         });
       });
@@ -2423,6 +2423,30 @@ describe('jsonMapper', () => {
         path: ['field1', 'field', 'field3'],
         defaultValue: 'default_value',
       })).to.eql('default_value');
+    });
+    it('basic with defaultValue `false`', () => {
+      expect(getValue({
+        field1: {
+          field2: {
+            field3: 'value',
+          },
+        },
+      }, {
+        path: ['field1', 'field', 'field3'],
+        defaultValue: false,
+      })).to.eql(false);
+    });
+    it('basic with defaultValue `null`', () => {
+      expect(getValue({
+        field1: {
+          field2: {
+            field3: 'value',
+          },
+        },
+      }, {
+        path: ['field1', 'field', 'field3'],
+        defaultValue: null,
+      })).to.eql(null);
     });
     it('basic with defaultValue and required `false` 1/2', () => {
       expect(getValue({
