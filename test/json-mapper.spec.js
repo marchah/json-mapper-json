@@ -439,6 +439,41 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
+  it('basic with defaultValue', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field.field3',
+        defaultValue: 'default_value',
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'default_value'});
+      done();
+    });
+  });
+  it('basic with defaultValue and required `false`', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field.field3',
+        defaultValue: 'default_value',
+        required: false,
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'default_value'});
+      done();
+    });
+  });
   it('basic with nested 1/2', (done) => {
     fct({
       field1: {
@@ -854,7 +889,81 @@ function unitTestForJsonMapper(fct) {
       done();
     });
   });
-  it('basic with formatting and nested and required `false` 2/2', (done) => {
+  it('basic with formatting and defaultValue 1/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field.field3',
+        defaultValue: 'default_value',
+        formatting: (value) => {return _.isUndefined(value) ? 'not_formatted' : (value + '_formatted');},
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'default_value_formatted'});
+      done();
+    });
+  });
+  it('basic with formatting and defaultValue 2/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field.field3',
+        defaultValue: 'default_value',
+        formatting: (value) => {return _.isUndefined(value) ? value : (value + '_formatted');},
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'default_value_formatted'});
+      done();
+    });
+  });
+  it('basic with formatting and defaultValue and required `false` 1/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field.field3',
+        defaultValue: 'default_value',
+        required: false,
+        formatting: (value) => {return _.isUndefined(value) ? 'not_formatted' : (value + '_formatted');},
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'default_value_formatted'});
+      done();
+    });
+  });
+  it('basic with formatting and defaultValue and required `false` 2/2', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+        },
+      },
+    }, {
+      'new_field': {
+        path: 'field1.field.field3',
+        defaultValue: 'default_value',
+        required: false,
+        formatting: (value) => {return _.isUndefined(value) ? value : (value + '_formatted');},
+      },
+    }).then((result) => {
+      expect(result).to.eql({'new_field': 'default_value_formatted'});
+      done();
+    });
+  });
+  it('basic with formatting and nested and required `false`', (done) => {
     fct({
       field1: {
         field2: {
@@ -918,6 +1027,150 @@ function unitTestForJsonMapper(fct) {
         },
         'new_field4': {
           'nested_field': 'not_formatted',
+        },
+      });
+      done();
+    }).catch((err) => {done(err);});
+  });
+  it('basic with formatting and nested and defaultValue', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+          field4: 'value4',
+        },
+      },
+    }, {
+      'new_field1': {
+        path: 'field1.field2',
+        defaultValue: 'default_value1',
+        nested: {
+          'nested_field': {
+            path: 'field3',
+            formatting: (value) => {return _.isUndefined(value) ? value : (value + '_formatted');},
+          },
+        },
+      },
+      'new_field2': {
+        path: 'field1.field2',
+        defaultValue: 'default_value2',
+        nested: {
+          'nested_field': {
+            path: 'field',
+            defaultValue: 'default_value3',
+          },
+        },
+        formatting: (value) => {return _.isUndefined(value) ? 'not_formatted' : (value + '_formatted');},
+      },
+      'new_field3': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field': {
+            path: 'field4',
+            defaultValue: 'default_value4',
+            formatting: (value) => {return _.isUndefined(value) ? value : (value + '_formatted');},
+          },
+        },
+      },
+      'new_field4': {
+        path: 'field1.field2',
+        nested: {
+          'nested_field': {
+            path: 'field',
+            defaultValue: 'default_value5',
+            formatting: (value) => {return _.isUndefined(value) ? 'not_formatted' : (value + '_formatted');},
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'new_field1': {
+          'nested_field': 'value_formatted',
+        },
+        'new_field2': {
+          nested_field: 'default_value3',
+        },
+        'new_field3': {
+          'nested_field': 'value4_formatted',
+        },
+        'new_field4': {
+          'nested_field': 'default_value5_formatted',
+        },
+      });
+      done();
+    }).catch((err) => {done(err);});
+  });
+  it('basic with formatting and nested and defaultValue and required `false`', (done) => {
+    fct({
+      field1: {
+        field2: {
+          field3: 'value',
+          field4: 'value4',
+        },
+      },
+    }, {
+      'new_field1': {
+        path: 'field1.field2',
+        defaultValue: 'default_value1',
+        required: false,
+        nested: {
+          'nested_field': {
+            path: 'field3',
+            required: true,
+            formatting: (value) => {return _.isUndefined(value) ? value : (value + '_formatted');},
+          },
+        },
+      },
+      'new_field2': {
+        path: 'field1.field2',
+        defaultValue: 'default_value2',
+        required: false,
+        nested: {
+          'nested_field': {
+            path: 'field',
+            defaultValue: 'default_value3',
+            required: false,
+          },
+        },
+        formatting: (value) => {return _.isUndefined(value) ? 'not_formatted' : (value + '_formatted');},
+      },
+      'new_field3': {
+        path: 'field1.field2',
+        required: true,
+        nested: {
+          'nested_field': {
+            path: 'field4',
+            defaultValue: 'default_value4',
+            required: false,
+            formatting: (value) => {return _.isUndefined(value) ? value : (value + '_formatted');},
+          },
+        },
+      },
+      'new_field4': {
+        path: 'field1.field2',
+        required: true,
+        nested: {
+          'nested_field': {
+            path: 'field',
+            defaultValue: 'default_value5',
+            required: false,
+            formatting: (value) => {return _.isUndefined(value) ? 'not_formatted' : (value + '_formatted');},
+          },
+        },
+      },
+    }).then((result) => {
+      expect(result).to.eql({
+        'new_field1': {
+          'nested_field': 'value_formatted',
+        },
+        'new_field2': {
+          nested_field: 'default_value3',
+        },
+        'new_field3': {
+          'nested_field': 'value4_formatted',
+        },
+        'new_field4': {
+          'nested_field': 'default_value5_formatted',
         },
       });
       done();
@@ -1072,6 +1325,43 @@ function unitTestForJsonMapper(fct) {
       },
     }).then((result) => {
       expect(result).to.eql([{'new_field': 'value1'}, {'new_field': 'value3'}]);
+      done();
+    }).catch((err) => {done(err);});
+  });
+  it('array with defaultValue', (done) => {
+    fct([{
+      field: 'value1',
+    }, {
+      field1: 'value2',
+    }, {
+      field: 'value3',
+    },
+    ], {
+      'new_field': {
+        path: 'field',
+        defaultValue: 'default_value',
+      },
+    }).then((result) => {
+      expect(result).to.eql([{'new_field': 'value1'}, {'new_field': 'default_value'}, {'new_field': 'value3'}]);
+      done();
+    }).catch((err) => {done(err);});
+  });
+  it('array with defaultValue and required `false`', (done) => {
+    fct([{
+      field: 'value1',
+    }, {
+      field1: 'value2',
+    }, {
+      field: 'value3',
+    },
+    ], {
+      'new_field': {
+        path: 'field',
+        defaultValue: 'default_value',
+        required: false,
+      },
+    }).then((result) => {
+      expect(result).to.eql([{'new_field': 'value1'}, {'new_field': 'default_value'}, {'new_field': 'value3'}]);
       done();
     }).catch((err) => {done(err);});
   });
@@ -1387,30 +1677,33 @@ describe('jsonMapper', () => {
           done();
         }
       });
-      it('should validate path writting 1/3', () => {
+      it('should validate path keyword case 1/3', () => {
         expect(getSettings({path: 'path'})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
-      it('should validate path writting 2/3', () => {
+      it('should validate path keyword case 2/3', () => {
         expect(getSettings({Path: 'path'})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
-      it('should validate path writting 3/3', () => {
+      it('should validate path keyword case 3/3', () => {
         expect(getSettings({PATH: 'path'})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1420,6 +1713,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1429,6 +1723,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path1', 'path2', 'path3'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1438,6 +1733,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path1', 'path2', 'path3'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1476,30 +1772,33 @@ describe('jsonMapper', () => {
       });
     });
     describe('Type', () => {
-      it('should validate type writting 1/3', () => {
+      it('should validate type keyword case 1/3', () => {
         expect(getSettings({path: 'path', type: String})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: String,
+          defaultValue: null,
           required: true,
         });
       });
-      it('should validate type writting 2/3', () => {
+      it('should validate type keyword case 2/3', () => {
         expect(getSettings({path: 'path', Type: String})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: String,
+          defaultValue: null,
           required: true,
         });
       });
-      it('should validate type writting 3/3', () => {
+      it('should validate type keyword case 3/3', () => {
         expect(getSettings({path: 'path', TYPE: String})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: String,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1509,6 +1808,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Boolean,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1518,6 +1818,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: String,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1527,6 +1828,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Number,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1536,6 +1838,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Date,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1545,6 +1848,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Array,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1554,6 +1858,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: Object,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1563,6 +1868,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: ObjectId,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1700,62 +2006,68 @@ describe('jsonMapper', () => {
           done();
         }
       });
-      it('should validate formatting writting 1/3', () => {
+      it('should validate formatting keyword case 1/3', () => {
         const ret = getSettings({path: 'path', formatting: () => {}});
         expect(ret).to.be.an('object');
-        expect((_.keys(ret)).length).to.eql(5);
+        expect((_.keys(ret)).length).to.eql(6);
         expect(typeof ret.formatting).to.eql('function');
         expect(ret.nested).to.eql(null);
         expect(ret.path).to.eql(['path']);
         expect(ret.type).to.eql(null);
+        expect(ret.defaultValue).to.eql(null);
         expect(ret.required).to.eql(true);
       });
-      it('should validate formatting writting 2/3', () => {
+      it('should validate formatting keyword case 2/3', () => {
         const ret = getSettings({path: 'path', Formatting: () => {}});
         expect(ret).to.be.an('object');
-        expect((_.keys(ret)).length).to.eql(5);
+        expect((_.keys(ret)).length).to.eql(6);
         expect(typeof ret.formatting).to.eql('function');
         expect(ret.nested).to.eql(null);
         expect(ret.path).to.eql(['path']);
         expect(ret.type).to.eql(null);
+        expect(ret.defaultValue).to.eql(null);
         expect(ret.required).to.eql(true);
       });
-      it('should validate formatting writting 3/3', () => {
+      it('should validate formatting keyword case 3/3', () => {
         const ret = getSettings({path: 'path', FORMATTING: () => {}});
         expect(ret).to.be.an('object');
-        expect((_.keys(ret)).length).to.eql(5);
+        expect((_.keys(ret)).length).to.eql(6);
         expect(typeof ret.formatting).to.eql('function');
         expect(ret.nested).to.eql(null);
         expect(ret.path).to.eql(['path']);
         expect(ret.type).to.eql(null);
+        expect(ret.defaultValue).to.eql(null);
         expect(ret.required).to.eql(true);
       });
     });
     describe('Nested', () => {
-      it('should validate nested writting 1/3', () => {
+      it('should validate nested keyword case 1/3', () => {
         expect(getSettings({path: 'path', nested: {}})).to.eql({
           formatting: null,
           nested: {},
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
-      it('should validate nested writting 2/3', () => {
+      it('should validate nested keyword case 2/3', () => {
         expect(getSettings({path: 'path', Nested: {}})).to.eql({
           formatting: null,
           nested: {},
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
-      it('should validate nested writting 3/3', () => {
+      it('should validate nested keyword case 3/3', () => {
         expect(getSettings({path: 'path', NESTED: {}})).to.eql({
           formatting: null,
           nested: {},
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1851,6 +2163,7 @@ describe('jsonMapper', () => {
           nested: {},
           path: ['path'],
           type: Object,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1860,35 +2173,101 @@ describe('jsonMapper', () => {
           nested: {},
           path: ['path'],
           type: Array,
+          defaultValue: null,
+          required: true,
+        });
+      });
+    });
+    describe('DefaultValue', () => {
+      it('should validate defaultValue keyword case 1/3', () => {
+        expect(getSettings({path: 'path', defaultvalue: 'value'})).to.eql({
+          formatting: null,
+          nested: null,
+          path: ['path'],
+          type: null,
+          defaultValue: 'value',
+          required: true,
+        });
+      });
+      it('should validate required keyword case 2/3', () => {
+        expect(getSettings({path: 'path', DefaultValue: 'value'})).to.eql({
+          formatting: null,
+          nested: null,
+          path: ['path'],
+          type: null,
+          defaultValue: 'value',
+          required: true,
+        });
+      });
+      it('should validate required keyword case 3/3', () => {
+        expect(getSettings({path: 'path', DEFAULTVALUE: 'value'})).to.eql({
+          formatting: null,
+          nested: null,
+          path: ['path'],
+          type: null,
+          defaultValue: 'value',
+          required: true,
+        });
+      });
+      it('should validate when no defaultValue', () => {
+        expect(getSettings({path: 'path'})).to.eql({
+          formatting: null,
+          nested: null,
+          path: ['path'],
+          type: null,
+          defaultValue: null,
+          required: true,
+        });
+      });
+      it('should validate when defaultValue is `null`', () => {
+        expect(getSettings({path: 'path'})).to.eql({
+          formatting: null,
+          nested: null,
+          path: ['path'],
+          type: null,
+          defaultValue: null,
+          required: true,
+        });
+      });
+      it('should validate when defaultValue is `undefined`', () => {
+        expect(getSettings({path: 'path'})).to.eql({
+          formatting: null,
+          nested: null,
+          path: ['path'],
+          type: null,
+          defaultValue: null,
           required: true,
         });
       });
     });
     describe('Required', () => {
-      it('should validate required writting 1/3', () => {
+      it('should validate required keyword case 1/3', () => {
         expect(getSettings({path: 'path', required: true})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
-      it('should validate required writting 2/3', () => {
+      it('should validate required keyword case 2/3', () => {
         expect(getSettings({path: 'path', Required: true})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
-      it('should validate required writting 3/3', () => {
+      it('should validate required keyword case 3/3', () => {
         expect(getSettings({path: 'path', REQUIRED: true})).to.eql({
           formatting: null,
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1898,6 +2277,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1907,6 +2287,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1916,6 +2297,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: true,
         });
       });
@@ -1925,6 +2307,7 @@ describe('jsonMapper', () => {
           nested: null,
           path: ['path'],
           type: null,
+          defaultValue: null,
           required: false,
         });
       });
@@ -2020,6 +2403,61 @@ describe('jsonMapper', () => {
         path: ['field1', 'field', 'field3'],
         required: false,
       })).to.eql(undefined);
+    });
+    it('basic with defaultValue 1/2', () => {
+      expect(getValue({
+        field: 'value',
+      }, {
+        path: ['field1'],
+        defaultValue: 'default_value',
+      })).to.eql('default_value');
+    });
+    it('basic with defaultValue 2/2', () => {
+      expect(getValue({
+        field1: {
+          field2: {
+            field3: 'value',
+          },
+        },
+      }, {
+        path: ['field1', 'field', 'field3'],
+        defaultValue: 'default_value',
+      })).to.eql('default_value');
+    });
+    it('basic with defaultValue and required `false` 1/2', () => {
+      expect(getValue({
+        field: 'value',
+      }, {
+        path: ['field1'],
+        defaultValue: 'default_value',
+        required: false,
+      })).to.eql('default_value');
+    });
+    it('basic with defaultValue and required `false` 2/2', () => {
+      expect(getValue({
+        field1: {
+          field2: {
+            field3: 'value',
+          },
+        },
+      }, {
+        path: ['field1', 'field', 'field3'],
+        defaultValue: 'default_value',
+        required: false,
+      })).to.eql('default_value');
+    });
+    it('basic with defaultValue Object', () => {
+      expect(getValue({
+        field1: {
+          field2: {
+            field3: 'value',
+          },
+        },
+      }, {
+        path: ['field1', 'field', 'field3'],
+        defaultValue: { field: 'default_value' },
+        required: false,
+      })).to.eql({ field: 'default_value' });
     });
     it('[mongoose] basic with required `false` 1/2', () => {
       expect(getValue(new Model({

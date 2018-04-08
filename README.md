@@ -29,11 +29,13 @@ jsonMapper(json<Object>, template<Object>) => Promise
     path: <String>, // required
     required: <Boolean> // not required, default `true`
     formatting: <Function> // optional (ex: function(value) {return value + '_formatted';})
+    defaultValue: <AnyType> // optional
     type: <NativeType> // optional (ex: String, Number, Boolean, ...) (not supported yet)
     nested: { <Object> // optional
       newNestedFieldName: <String>,
       required: <Boolean> // not required, default `true`
       formatting: <Function> // optional
+      defaultValue: <AnyType> // optional
       type: <NativeType> // optional (ex: String, Number, Boolean, ...) (not supported yet)
       nested: { <Object> // optional
         ...
@@ -85,6 +87,28 @@ jsonMapper({
   /*
   result === {
     'new_field1': 'value1',
+  }
+  */
+});
+```
+
+### Basic with `defaultValue`
+```javascript
+jsonMapper({
+  field1: 'value1',
+}, {
+  'new_field1': {
+    path: 'field1',
+  },
+  'new_field2': {
+    path: 'field2',
+    defaultValue: 'default_value',
+  },
+}).then((result) => {
+  /*
+  result === {
+    'new_field1': 'value1',
+    'new_field2': 'default_value',
   }
   */
 });
