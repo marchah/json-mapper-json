@@ -1,6 +1,6 @@
 {
   "name": "json-mapper-json",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "main": "./index.js",
   "description": "convert json object into a new formatted json object",
   "scripts": {
